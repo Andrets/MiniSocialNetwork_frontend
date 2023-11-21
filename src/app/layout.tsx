@@ -1,13 +1,15 @@
-import { Layout } from '@/components/layout/layout'
+import Layout from '@/components/layout/Layout'
+import { Provider } from '@/util/Providers'
 import type { Metadata } from 'next'
-import { Inter } from 'next/font/google'
+import { Roboto_Slab } from 'next/font/google'
 import './globals.scss'
 
-const inter = Inter({ subsets: ['latin'] })
+const inter = Roboto_Slab({ subsets: ['latin', 'cyrillic'], weight: ['500'] })
 
 export const metadata: Metadata = {
 	title: 'ChatMessanger',
-	description: 'Best one for safe chatting'
+	description: 'Best one for safe chatting',
+	icons: '/logo.svg'
 }
 
 export default function RootLayout({
@@ -18,7 +20,9 @@ export default function RootLayout({
 	return (
 		<html lang='en'>
 			<body className={inter.className}>
-				<Layout>{children}</Layout>
+				<Provider>
+					<Layout>{children}</Layout>
+				</Provider>
 			</body>
 		</html>
 	)

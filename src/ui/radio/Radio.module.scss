@@ -1,0 +1,6 @@
+.radio {
+	@apply flex flex-row items-center px-2 gap-10;
+	> input {
+		@apply flex;
+	}
+}

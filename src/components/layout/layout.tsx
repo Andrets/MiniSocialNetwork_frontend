@@ -1,13 +1,12 @@
-'use client'
-
 import type { PropsWithChildren } from 'react'
-import Header from './Header/Header'
+import Header from '../header/header'
+import styles from './Layout.module.scss'
 
-export function Layout({ children }: PropsWithChildren) {
+export default function Layout({ children }: PropsWithChildren<unknown>) {
 	return (
-		<div>
+		<main className={styles.layout}>
 			<Header />
-			<main>{children}</main>
-		</div>
+			<section>{children}</section>
+		</main>
 	)
 }
