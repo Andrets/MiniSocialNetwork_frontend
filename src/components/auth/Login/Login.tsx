@@ -28,6 +28,7 @@ export function AuthLoginPage() {
 		mutationKey: ['loginData'],
 		mutationFn: async (formData: ILoginForm) => await fetchLogin(formData),
 		onSuccess: data => {
+			queryClient.clear()
 			const accessToken = data.accessToken
 			queryClient.setQueryData(['login'], accessToken)
 			const refreshToken = data.refreshToken
