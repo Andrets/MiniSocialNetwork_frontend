@@ -1,0 +1,11 @@
+.link {
+	@apply flex flex-row gap-32 mb-10;
+
+	> a {
+		@apply bg-[#D9D9D9] mb-4 py-2 px-6 rounded-[25px] transition-colors duration-300 hover:bg-[#D9D9D9]/70;
+
+		&.active {
+			@apply text-[#BBBBBB];
+		}
+	}
+}
