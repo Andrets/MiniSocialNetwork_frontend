@@ -80,7 +80,7 @@ export function Register() {
 					{...register('password', { required: true })}
 				/>
 				{mutation.isError ? (
-					<div>An error: {mutation.error.message}</div>
+					<div className="w-96">An error: {mutation.error.message}</div>
 				) : null}
 				<Button
 					type='submit'
