@@ -10,17 +10,16 @@ import cn from 'clsx'
 import Cookies from 'js-cookie'
 import { KeyRound, Mail } from 'lucide-react'
 import Link from 'next/link'
-import { usePathname, useRouter } from 'next/navigation'
+import {redirect, usePathname, useRouter} from 'next/navigation'
 import { SubmitHandler, useForm } from 'react-hook-form'
 import styles from './login.module.scss'
+import {useEffect} from "react";
+import axios from 'axios';
 
 export function AuthLoginPage() {
 	const router = useRouter()
-	const {
-		handleSubmit,
-		register,
-		formState: { errors }
-	} = useForm<ILoginForm>()
+	const  { handleSubmit,
+		register} = useForm<ILoginForm>()
 	const queryClient = useQueryClient()
 	const pathname = usePathname()
 
@@ -28,11 +27,8 @@ export function AuthLoginPage() {
 		mutationKey: ['loginData'],
 		mutationFn: async (formData: ILoginForm) => await fetchLogin(formData),
 		onSuccess: data => {
-			queryClient.clear()
-			const accessToken = data.accessToken
-			queryClient.setQueryData(['login'], accessToken)
-			const refreshToken = data.refreshToken
-			Cookies.set('refresh_token', refreshToken)
+			console.log(data)
+			queryClient.setQueryData(['login'], data.accessToken)
 			router.push('/')
 		},
 		onError: error => {
@@ -41,6 +37,13 @@ export function AuthLoginPage() {
 			queryClient.setQueryData(['error'], wrongData)
 		}
 	})
+
+	useEffect(() => {
+		const refreshToken = Cookies.get('refresh_token')
+		if (refreshToken) {
+			router.push('/')
+		}
+	}, []);
 
 	const OnSubmit: SubmitHandler<ILoginForm> = async formData => {
 		try {
@@ -51,18 +54,24 @@ export function AuthLoginPage() {
 		}
 	}
 
+	if (mutation.isSuccess) {
+		return <div>Loading...</div>
+	}
+
 	return (
 		<div className='flex h-full justify-center items-center flex-col gap-8'>
 			<div className={styles.link}>
 				<Link
 					href='/login'
 					className={cn({ [styles.active]: pathname === '/login' })}
+					aria-disabled={pathname === '/login'}
 				>
 					Login
 				</Link>
 				<Link
 					href='/register'
 					className={cn({ [styles.active]: pathname === '/register' })}
+					aria-disabled={pathname === '/register'}
 				>
 					Registration
 				</Link>
@@ -89,7 +98,7 @@ export function AuthLoginPage() {
 					placeholder='Rembember me?'
 					message='Remember me'
 				/>
-				<h1 className='text-red-600'>{queryClient.getQueryData(['error'])}</h1>
+				{mutation.isError ? <div className='w-96'>An error: {mutation.error.message}</div> : null}
 				<Button
 					type='submit'
 					isLoading={false}
